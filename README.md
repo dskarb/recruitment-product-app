@@ -43,6 +43,8 @@ W pliku `package.json` zdefiniowano następujące polecenia:
 | `npm run build` | Buduje zoptymalizowaną wersję produkcyjną aplikacji |
 | `npm run start` | Uruchamia zbudowaną wcześniej wersję produkcyjną |
 | `npm run lint` | Weryfikuje kod za pomocą ESLint |
+| `npm test` | Uruchamia pełny zestaw testów jednostkowych i integracyjnych (Vitest) |
+| `npm run test:watch` | Uruchamia runner testów w trybie interaktywnym (watch) |
 
 ---
 
@@ -54,8 +56,28 @@ W pliku `package.json` zdefiniowano następujące polecenia:
 - **Walidacja danych**: [Zod](https://zod.dev/) — rygorystyczne schematy walidacji dla każdego z 3 kroków
 - **Paginacja URL**: [nuqs](https://nuqs.47ng.com/) — dwukierunkowa synchronizacja stanu paginacji z parametrami wyszukiwania URL (`?page=X`)
 - **Powiadomienia**: [Sonner](https://sonner.emilkowal.ski/) (Toast notifications)
+- **Testy**: [Vitest](https://vitest.dev/) + [@testing-library/react](https://testing-library.com/) + jsdom
 
 ---
+
+## 🧪 Strategia testów i jakość kodu
+
+W projekcie wdrożono zestaw testów oparty o piramidę testów frontendowych:
+
+1. **Testy jednostkowe logiki biznesowej i finansowej**:
+   - `src/lib/pricing.test.ts`: sanityzacja inputów walutowych, dwukierunkowe przeliczanie netto ↔ brutto z uwzględnieniem stawek VAT (23%, 8%, 5%, 0%), zaokrąglenia i obsługa błędnych wartości.
+   - `src/lib/formatters.test.ts`: polska lokalizacja waluty (`PLN`, `EUR`, `USD`, `GBP`) oraz reguły odmiany gramatycznej języka polskiego (*1 produkt*, *2 produkty*, *5 produktów*).
+2. **Testy schematów i reguł domenowych**:
+   - `src/lib/schemas.test.ts`: walidacja reguł Zod dla kroków 1, 2 i 3 (wymagane pola, regex SKU `[a-zA-Z0-9]`, spójność brutto z netto i VAT z marginesem tolerancji, warunkowy wymóg stanu magazynowego dla produktów limitowanych, relacja $\text{min} \le \text{maks}$ dla koszyka) oraz transformacje `mapFormDataToProduct` i `mapZodErrors`.
+3. **Testy hooków stanu i maszyny stanów**:
+   - `src/hooks/use-products.test.tsx`: logika paginacji, dodawanie produktu na początek listy (`isNew: true`), resetowanie strony do pierwszej (`NuqsTestingAdapter`).
+   - `src/components/product-dialog/use-product-wizard.test.ts`: orkiestracja kroków kreatora, blokowanie przejścia dalej przy błędach, cofanie, sekwencyjna walidacja przed zapisem.
+4. **Testy komponentów UI i responsywności**:
+   - `src/components/product-table/pagination.test.tsx`: nawigacja paginacji, stany disabled dla krańcowych stron, atrybuty a11y (`aria-current="page"`, `aria-label`).
+   - `src/components/product-table/product-table.test.tsx`: renderowanie wierszy, stan pusty, etykieta `NOWY`, stany magazynowe.
+   - `src/components/product-table/product-cards.test.tsx`: widok kart dla urządzeń mobilnych, statusy i formatowanie.
+   - `src/components/product-dialog/product-dialog.test.tsx`: otwieranie/zamykanie dialogu, sprawdzanie blokad i komunikatów walidacji.
+   - `src/components/product-dialog/step-2-price.test.tsx`: reaktywne przeliczanie cen w czasie rzeczywistym podczas wpisywania przez użytkownika.
 
 ## ✨ Funkcjonalności i architektura
 
@@ -103,27 +125,43 @@ W pliku `package.json` zdefiniowano następujące polecenia:
 ```text
 ├── src/
 │   ├── app/
-│   │   ├── globals.css         # Style globalne Tailwind v4 i zmienne CSS
-│   │   ├── layout.tsx          # Główny layout (font Geist, NuqsAdapter, Toaster)
-│   │   └── page.tsx            # Główna strona katalogu produktów
+│   │   ├── globals.css                   # Style globalne Tailwind v4 i zmienne CSS
+│   │   ├── layout.tsx                    # Główny layout (font Geist, NuqsAdapter, Toaster)
+│   │   └── page.tsx                      # Główna strona katalogu produktów
 │   ├── components/
-│   │   ├── product-dialog/     # Komponenty formularza modalnego i kroków
-│   │   │   ├── form-stepper.tsx
-│   │   │   ├── step-1-basic.tsx
-│   │   │   ├── step-2-price.tsx
-│   │   │   └── step-3-inventory.tsx
-│   │   ├── product-table/      # Komponenty tabeli, kart i paginacji
-│   │   │   ├── product-cards.tsx
-│   │   │   ├── product-pagination.tsx
-│   │   │   └── product-table.tsx
-│   │   └── ui/                 # Komponenty bazowe shadcn / base-ui
-│   ├── hooks/                  # Hooki stanu produktów i formularza
-│   │   ├── use-product-dialog.ts
-│   │   └── use-product-form.ts
-│   └── lib/                    # Schematy walidacji Zod, typy, mocki danych
-│       ├── form-schema.ts
-│       ├── mock-data.ts
-│       └── utils.ts
+│   │   ├── product-dialog/               # Komponenty formularza modalnego i kroków
+│   │   │   ├── product-dialog.tsx        # Główny modal kreatora
+│   │   │   ├── product-dialog.test.tsx   # Testy integracyjne dialogu
+│   │   │   ├── step-indicator.tsx        # Stepper kroków z checkmarkami
+│   │   │   ├── step-1-basic.tsx          # Krok 1: Dane podstawowe
+│   │   │   ├── step-2-price.tsx          # Krok 2: Dane cenowe i stawka VAT
+│   │   │   ├── step-2-price.test.tsx     # Testy reaktywnych kalkulacji cenowych
+│   │   │   ├── step-3-stock.tsx          # Krok 3: Magazyn i limity zamówień
+│   │   │   ├── use-product-wizard.ts     # Maszyna stanów wieloetapowego formularza
+│   │   │   ├── use-product-wizard.test.ts# Testy hooka orkiestracji kroków
+│   │   │   └── wizard-config.ts          # Konfiguracja kroków i wartości domyślne
+│   │   ├── product-table/                # Komponenty tabeli, kart i paginacji
+│   │   │   ├── pagination.tsx            # Paginacja z kontrolkami
+│   │   │   ├── pagination.test.tsx       # Testy nawigacji i a11y paginacji
+│   │   │   ├── product-cards.tsx         # Widok kart na urządzenia mobilne
+│   │   │   ├── product-cards.test.tsx    # Testy widoku mobilnego
+│   │   │   ├── product-table.tsx         # Widok tabeli desktopowej
+│   │   │   └── product-table.test.tsx    # Testy renderowania tabeli i statusów
+│   │   └── ui/                           # Komponenty bazowe shadcn / base-ui
+│   │       ├── button.tsx, dialog.tsx, input.tsx, select.tsx, switch.tsx...
+│   ├── hooks/
+│   │   ├── use-products.ts               # Hook stanu produktów z synchronizacją URL (nuqs)
+│   │   └── use-products.test.tsx         # Testy paginacji i dodawania produktów
+│   └── lib/
+│       ├── formatters.ts                 # Polska lokalizacja walut i fleksja rzeczowników
+│       ├── formatters.test.ts            # Testy formaterów
+│       ├── mock-products.ts              # Początkowe dane testowe
+│       ├── pricing.ts                    # Funkcje przeliczania netto/brutto i sanityzacja
+│       ├── pricing.test.ts               # Testy finansowe i sanityzacji inputu
+│       ├── schemas.ts                    # Schematy walidacji Zod i mapery encji
+│       ├── schemas.test.ts               # Testy walidacji Zod
+│       ├── types.ts                      # Typy domenowe i stałe
+│       └── utils.ts                      # Helper cn()
 ├── package.json
 └── README.md
 ```
