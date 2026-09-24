@@ -167,6 +167,10 @@ export function Step2Price({ form, errors, clearError }: Step2PriceProps) {
                   Stawka VAT
                 </Label>
                 <Select
+                  items={VAT_RATES.map((r) => ({
+                    label: r.label,
+                    value: String(r.value),
+                  }))}
                   value={
                     field.state.value !== undefined && field.state.value !== null
                       ? String(field.state.value)
@@ -181,7 +185,14 @@ export function Step2Price({ form, errors, clearError }: Step2PriceProps) {
                       errors.vat && "border-destructive focus:ring-destructive"
                     )}
                   >
-                    <SelectValue placeholder="23%" />
+                    <SelectValue placeholder="23%">
+                      {(val) => {
+                        const found = VAT_RATES.find(
+                          (r) => String(r.value) === String(val)
+                        );
+                        return found ? found.label : val ? `${val}%` : "23%";
+                      }}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {VAT_RATES.map((rate) => (
