@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Product } from "@/lib/types";
-import { formatPrice } from "@/lib/formatters";
+import { Product } from "../../types";
+import { formatPrice } from "../../utils/formatters";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 

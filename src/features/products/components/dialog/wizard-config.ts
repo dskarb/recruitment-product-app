@@ -1,5 +1,5 @@
-import { ProductFormData } from "@/lib/types";
-import { step1Schema, step2Schema, step3Schema } from "@/lib/schemas";
+import { ProductFormData } from "../../types";
+import { step1Schema, step2Schema, step3Schema } from "../../schemas";
 import { z } from "zod";
 
 export interface WizardStepItem {

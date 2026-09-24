@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { ProductFormInstance } from "./use-product-wizard";
+import { ProductFormInstance } from "../../hooks/use-product-wizard";
 
 interface Step3StockProps {
   form: ProductFormInstance;

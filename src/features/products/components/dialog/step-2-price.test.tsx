@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Step2Price } from "./step-2-price";
-import { useProductWizard } from "./use-product-wizard";
+import { useProductWizard } from "../../hooks/use-product-wizard";
 
 vi.mock("sonner", () => ({
   toast: {

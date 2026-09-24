@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ProductTable } from "./product-table";
-import { Product } from "@/lib/types";
+import { Product } from "../../types";
 
 const mockProducts: Product[] = [
   {

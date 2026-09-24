@@ -10,9 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PRODUCERS, CATEGORIES, PRODUCT_FEATURES } from "@/lib/types";
+import { PRODUCERS, CATEGORIES, PRODUCT_FEATURES } from "../../types";
 import { cn } from "@/lib/utils";
-import { ProductFormInstance } from "./use-product-wizard";
+import { ProductFormInstance } from "../../hooks/use-product-wizard";
 
 interface Step1BasicProps {
   form: ProductFormInstance;

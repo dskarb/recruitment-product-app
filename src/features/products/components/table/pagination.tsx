@@ -3,7 +3,7 @@
 import React, { useMemo, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { pluralizeProducts } from "@/lib/formatters";
+import { pluralizeProducts } from "../../utils/formatters";
 
 export interface PaginationProps {
   currentPage: number;

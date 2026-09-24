@@ -1,12 +1,15 @@
 "use client";
 
 import { Suspense } from "react";
-import { useProducts, DEFAULT_PAGE_SIZE } from "@/hooks/use-products";
-import { pluralizeProducts } from "@/lib/formatters";
-import { ProductTable } from "@/components/product-table/product-table";
-import { ProductCards } from "@/components/product-table/product-cards";
-import { ProductPagination } from "@/components/product-table/pagination";
-import { ProductDialog } from "@/components/product-dialog/product-dialog";
+import {
+  useProducts,
+  DEFAULT_PAGE_SIZE,
+  pluralizeProducts,
+  ProductTable,
+  ProductCards,
+  ProductPagination,
+  ProductDialog,
+} from "@/features/products";
 
 function ProductsContent() {
   const {

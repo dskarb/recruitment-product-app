@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CURRENCIES } from "./types";
+import { CURRENCIES } from "../types";
 
 export const step1Schema = z.object({
   nazwa: z
@@ -170,7 +170,7 @@ export type Step1FormData = z.infer<typeof step1Schema>;
 export type Step2FormData = z.infer<typeof step2Schema>;
 export type Step3FormData = z.infer<typeof step3Schema>;
 
-import { Product, ProductFormData } from "./types";
+import { Product, ProductFormData } from "../types";
 
 /**
  * Konwertuje błędy ZodIssue do płaskiego słownika błędów pól { [pole]: komunikat }

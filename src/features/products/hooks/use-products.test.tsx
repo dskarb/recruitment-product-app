@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { NuqsTestingAdapter } from "nuqs/adapters/testing";
 import { useProducts } from "./use-products";
-import { Product } from "@/lib/types";
+import { Product } from "../types";
 
 const mockProducts: Product[] = Array.from({ length: 12 }, (_, i) => ({
   id: `prod-${i + 1}`,

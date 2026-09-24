@@ -12,8 +12,8 @@ import { StepIndicator } from "./step-indicator";
 import { Step1Basic } from "./step-1-basic";
 import { Step2Price } from "./step-2-price";
 import { Step3Stock } from "./step-3-stock";
-import { Product } from "@/lib/types";
-import { useProductWizard } from "./use-product-wizard";
+import { Product } from "../../types";
+import { useProductWizard } from "../../hooks/use-product-wizard";
 import { WIZARD_STEPS } from "./wizard-config";
 
 interface ProductDialogProps {

@@ -3,9 +3,9 @@
 import { useState, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
-import { Product } from "@/lib/types";
-import { mapFormDataToProduct, mapZodErrors } from "@/lib/schemas";
-import { DEFAULT_FORM_DATA, WIZARD_STEPS } from "./wizard-config";
+import { Product } from "../types";
+import { mapFormDataToProduct, mapZodErrors } from "../schemas";
+import { DEFAULT_FORM_DATA, WIZARD_STEPS } from "../components/dialog/wizard-config";
 
 interface UseProductWizardProps {
   onAddProduct: (product: Product) => void;

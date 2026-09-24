@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CURRENCIES, VAT_RATES, Currency } from "@/lib/types";
+import { CURRENCIES, VAT_RATES, Currency } from "../../types";
 import { cn } from "@/lib/utils";
-import { calculateBrutto, calculateNetto, sanitizePriceInput } from "@/lib/pricing";
-import { ProductFormInstance } from "./use-product-wizard";
+import { calculateBrutto, calculateNetto, sanitizePriceInput } from "../../utils/pricing";
+import { ProductFormInstance } from "../../hooks/use-product-wizard";
 
 interface Step2PriceProps {
   form: ProductFormInstance;

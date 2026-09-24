@@ -5,8 +5,8 @@ import {
   step3Schema,
   mapFormDataToProduct,
   mapZodErrors,
-} from "./schemas";
-import { ProductFormData } from "./types";
+} from "./product.schema";
+import { ProductFormData } from "../types";
 
 describe("lib/schemas", () => {
   describe("step1Schema - Dane podstawowe", () => {

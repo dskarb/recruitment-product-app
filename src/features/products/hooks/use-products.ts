@@ -2,8 +2,8 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useQueryState, parseAsInteger } from "nuqs";
-import { INITIAL_PRODUCTS } from "@/lib/mock-products";
-import { Product } from "@/lib/types";
+import { INITIAL_PRODUCTS } from "../data/mock-products";
+import { Product } from "../types";
 
 export const DEFAULT_PAGE_SIZE = 5;
 
